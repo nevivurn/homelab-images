@@ -1,0 +1,81 @@
+name: Build
+
+on: [push]
+
+jobs:
+  list:
+    name: List
+    runs-on: ubuntu-latest
+
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@v21
+      - uses: DeterminateSystems/flake-checker-action@v12
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+      - name: Check formatting
+        run: nix fmt -- --ci
+
+      - name: List outputs
+        id: list
+        run: |
+          echo "list=$(nix flake show --json | jq -c '.packages."x86_64-linux" | keys')" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    needs: list
+    strategy:
+      matrix:
+        image: ${{ fromJSON(needs.list.outputs.list) }}
+
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+      attestations: write
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@v21
+      - uses: DeterminateSystems/magic-nix-cache-action@v13
+
+      - name: Build image
+        id: build
+        env:
+          BUILD_TARGET: ${{ matrix.image }}
+        run: |
+          echo "path=$(nix build ".#packages.x86_64-linux.$BUILD_TARGET" --print-build-logs --print-out-paths --no-link)" >> "$GITHUB_OUTPUT"
+          echo "version=$(nix eval --raw .#packages.x86_64-linux.$BUILD_TARGET.imageTag)-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Push image
+        id: push
+        env:
+          REGISTRY: ghcr.io/${{ github.repository }}
+          REGISTRY_USERNAME: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_PATH: ${{ steps.build.outputs.path }}
+          IMAGE_NAME: ${{ matrix.image }}
+          IMAGE_TAG: ${{ steps.build.outputs.version }}
+        run: |
+          skopeo copy \
+            --dest-username "$REGISTRY_USERNAME" \
+            --dest-password "$REGISTRY_PASSWORD" \
+            --digestfile /tmp/digests.txt \
+            "docker-archive:${BUILD_PATH}" \
+            "docker://${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+          echo "digest=$(</tmp/digests.txt)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ghcr.io/${{ github.repository }}/${{ matrix.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
