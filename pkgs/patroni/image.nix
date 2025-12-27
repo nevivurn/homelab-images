@@ -5,7 +5,14 @@
   coreutils,
   patroni,
   postgresql_18,
+  glibcLocales,
 }:
+
+let
+  locales = glibcLocales.override {
+    allLocales = false;
+  };
+in
 
 dockerTools.buildLayeredImage {
   name = patroni.pname;
@@ -16,11 +23,12 @@ dockerTools.buildLayeredImage {
       "--"
       (lib.getExe' patroni "patroni")
     ];
+    Env = [ "LOCALE_ARCHIVE=${locales}/lib/locale/locale-archive" ];
   };
   contents = [
+    coreutils
     dockerTools.binSh
     dockerTools.fakeNss
-    coreutils
     patroni
     postgresql_18
   ];
