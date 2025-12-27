@@ -14,11 +14,15 @@ dockerTools.buildLayeredImage {
       (lib.getExe tini)
       "--"
       (lib.getExe' chrony "chronyd")
+      "-U"
+      "-d"
+      "-x"
     ];
   };
   contents = [
     dockerTools.binSh
     dockerTools.fakeNss
+    dockerTools.caCertificates
     coreutils
     chrony
   ];
