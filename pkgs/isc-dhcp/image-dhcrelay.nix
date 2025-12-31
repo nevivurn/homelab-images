@@ -20,5 +20,6 @@ dockerTools.buildLayeredImage {
     dockerTools.binSh
     dockerTools.fakeNss
     coreutils
+    isc-dhcp
   ];
 }
