@@ -11,9 +11,9 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [ "mongodb-ce" ];
         overlays = [ self.overlays.default ];
       };
-      inherit (pkgs) lib callPackage;
     in
     {
       formatter.${system} = pkgs.nixfmt-tree;
@@ -29,11 +29,13 @@
             image = final.callPackage ./pkgs/patroni/image.nix { };
           };
         });
+        tpeap = final.callPackage ./pkgs/tpeap { };
       };
       packages.${system} = {
         chrony = pkgs.chrony.passthru.image;
         isc-dhcp-dhcrelay = pkgs.isc-dhcp.passthru.image-dhcrelay;
         patroni = pkgs.patroni.passthru.image;
+        tpeap = pkgs.tpeap.passthru.image;
       };
       checks.${system}.default = pkgs.linkFarm "homelab-images" self.packages.${system};
     };
