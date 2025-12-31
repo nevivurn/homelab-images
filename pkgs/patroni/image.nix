@@ -60,7 +60,6 @@ dockerTools.buildLayeredImage {
     coreutils
     dockerTools.binSh
     dockerTools.fakeNss
-    patroni'
     postgresql_18
   ];
 }

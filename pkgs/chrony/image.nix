@@ -24,6 +24,5 @@ dockerTools.buildLayeredImage {
     dockerTools.fakeNss
     dockerTools.caCertificates
     coreutils
-    chrony
   ];
 }

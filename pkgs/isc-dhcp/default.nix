@@ -1,12 +1,11 @@
 {
-  lib,
-  callPackage,
   stdenv,
   fetchFromGitLab,
+  callPackage,
   perl,
 }:
 
-stdenv.mkDerivation (finalAttrs: {
+stdenv.mkDerivation {
   pname = "isc-dhcp";
   version = "4.4.3";
 
@@ -22,4 +21,4 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [ perl ];
 
   passthru.image-dhcrelay = callPackage ./image-dhcrelay.nix { };
-})
+}
