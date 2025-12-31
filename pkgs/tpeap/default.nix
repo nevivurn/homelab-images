@@ -41,7 +41,7 @@ stdenvNoCC.mkDerivation {
 
     mkdir -p data/{db,keystore,pdf} logs properties
     ln -sf $out/data/{cluster,html} data
-    rsync -r --chmod D0755,F0644 $out/data/static data/static
+    rsync -r --chmod D0755,F0644 $out/data/static/ data/static/
     cp $out/properties/* properties
     chmod +w properties/*.properties
 
