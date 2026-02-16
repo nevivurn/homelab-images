@@ -17,6 +17,7 @@ stdenv.mkDerivation {
     hash = "sha256-ElyesVfWeIXh/rW7PRjWmqNyvTx2D4fWi/emTZkC9i4=";
   };
 
+  env.NIX_CFLAGS_COMPILE = "-std=gnu99";
   enableParallelBuilding = true;
   nativeBuildInputs = [ perl ];
 
