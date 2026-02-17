@@ -6,7 +6,7 @@
   isc-dhcp,
 }:
 
-dockerTools.buildLayeredImage {
+(dockerTools.buildLayeredImage {
   name = isc-dhcp.pname + "-dhcrelay";
   tag = isc-dhcp.version;
   config = {
@@ -22,4 +22,6 @@ dockerTools.buildLayeredImage {
     coreutils
     isc-dhcp
   ];
-}
+}).overrideAttrs (prev: {
+  passthru = (prev.passthru or {}) // { inherit isc-dhcp; };
+})

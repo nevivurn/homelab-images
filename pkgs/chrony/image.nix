@@ -6,7 +6,7 @@
   chrony,
 }:
 
-dockerTools.buildLayeredImage {
+(dockerTools.buildLayeredImage {
   name = chrony.pname;
   tag = chrony.version;
   config = {
@@ -26,4 +26,6 @@ dockerTools.buildLayeredImage {
     coreutils
     chrony
   ];
-}
+}).overrideAttrs (prev: {
+  passthru = (prev.passthru or {}) // { inherit chrony; };
+})

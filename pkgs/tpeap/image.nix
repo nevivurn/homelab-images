@@ -6,7 +6,7 @@
   tpeap,
 }:
 
-dockerTools.buildLayeredImage {
+(dockerTools.buildLayeredImage {
   name = tpeap.pname;
   tag = tpeap.version;
   config = {
@@ -23,4 +23,6 @@ dockerTools.buildLayeredImage {
     coreutils
     tpeap
   ];
-}
+}).overrideAttrs (prev: {
+  passthru = (prev.passthru or {}) // { inherit tpeap; };
+})

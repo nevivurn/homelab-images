@@ -45,7 +45,7 @@ let
   };
 in
 
-dockerTools.buildLayeredImage {
+(dockerTools.buildLayeredImage {
   name = patroni'.pname;
   tag = patroni'.version;
   config = {
@@ -63,4 +63,6 @@ dockerTools.buildLayeredImage {
     patroni
     postgresql_18
   ];
-}
+}).overrideAttrs (prev: {
+  passthru = (prev.passthru or {}) // { patroni = patroni'; };
+})
