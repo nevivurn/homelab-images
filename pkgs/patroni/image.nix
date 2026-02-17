@@ -63,6 +63,9 @@ in
     patroni
     postgresql_18
   ];
-}).overrideAttrs (prev: {
-  passthru = (prev.passthru or {}) // { patroni = patroni'; };
-})
+}).overrideAttrs
+  (prev: {
+    passthru = (prev.passthru or { }) // {
+      patroni = patroni';
+    };
+  })

@@ -22,6 +22,9 @@
     coreutils
     isc-dhcp
   ];
-}).overrideAttrs (prev: {
-  passthru = (prev.passthru or {}) // { inherit isc-dhcp; };
-})
+}).overrideAttrs
+  (prev: {
+    passthru = (prev.passthru or { }) // {
+      inherit isc-dhcp;
+    };
+  })

@@ -26,6 +26,9 @@
     coreutils
     chrony
   ];
-}).overrideAttrs (prev: {
-  passthru = (prev.passthru or {}) // { inherit chrony; };
-})
+}).overrideAttrs
+  (prev: {
+    passthru = (prev.passthru or { }) // {
+      inherit chrony;
+    };
+  })

@@ -23,6 +23,9 @@
     coreutils
     tpeap
   ];
-}).overrideAttrs (prev: {
-  passthru = (prev.passthru or {}) // { inherit tpeap; };
-})
+}).overrideAttrs
+  (prev: {
+    passthru = (prev.passthru or { }) // {
+      inherit tpeap;
+    };
+  })
