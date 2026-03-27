@@ -10,34 +10,10 @@
 }:
 
 let
-  patroni' = patroni.overridePythonAttrs {
-    dependencies = with python3Packages; [
-      # exclude dependencies for DCS modules other than etcd
-      click
-      prettytable
-      psutil
-      psycopg2
-      python-dateutil
-      python-etcd
-      pyyaml
-      tzlocal
-      urllib3
-      (ydiff.overridePythonAttrs {
-        # avoid including git, hg, etc. in the closure
-        patchPhase = ''
-          patchShebangs setup.py
-          patchShebangs tests/*.sh
-        '';
-        doCheck = false;
-      })
-    ];
-    disabledTestPaths = [
-      "tests/test_aws.py"
-      "tests/test_consul.py"
-      "tests/test_exhibitor.py"
-      "tests/test_raft.py"
-      "tests/test_raft_controller.py"
-      "tests/test_zookeeper.py"
+  patroni' = patroni.override {
+    extras = [
+      "psycopg2"
+      "etcd3"
     ];
   };
   locales = glibcLocales.override {

@@ -30,31 +30,6 @@
           };
         });
         tpeap = final.callPackage ./pkgs/tpeap { };
-
-        pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-          (python-final: python-prev: {
-            # ref: https://github.com/NixOS/nixpkgs/pull/480738
-            python-etcd = python-prev.python-etcd.overridePythonAttrs (oldAttrs: {
-              version = "0.5.0-unstable-2023-10-31";
-              pyproject = true;
-
-              src = final.fetchFromGitHub {
-                owner = "jplana";
-                repo = "python-etcd";
-                rev = "5aea0fd4461bd05dd96e4ad637f6be7bceb1cee5";
-                hash = "sha256-eVirStLOPTbf860jfkNMWtGf+r0VygLZRjRDjBMCVKg=";
-              };
-
-              patches = (oldAttrs.patches or [ ]) ++ [
-                (final.fetchpatch2 {
-                  name = "remove-getheader-usage.patch";
-                  url = "https://raw.githubusercontent.com/deshaw/nixpkgs/c4dedfb8db95984c60f3339037c90c3541febb92/pkgs/development/python-modules/python-etcd/remove-getheader-usage.patch";
-                  hash = "sha256-TdZMGGhKKehwTNNZxMTVOoESZ7bAe5Sz1OFuLdLbjvs=";
-                })
-              ];
-            });
-          })
-        ];
       };
       packages.${system} = {
         chrony = pkgs.chrony.passthru.image;
