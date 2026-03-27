@@ -21,7 +21,7 @@ jobs:
       - name: List outputs
         id: list
         run: |
-          echo "list=$(nix flake show --json | jq -c '.packages."x86_64-linux" | keys')" >> "$GITHUB_OUTPUT"
+          echo "list=$(nix eval --json .#packages.x86_64-linux --apply builtins.attrNames)" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build
