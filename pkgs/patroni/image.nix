@@ -5,7 +5,6 @@
   tini,
   coreutils,
   patroni,
-  python3Packages,
   postgresql_18,
 }:
 
