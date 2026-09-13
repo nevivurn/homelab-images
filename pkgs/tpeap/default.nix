@@ -12,11 +12,11 @@
 
 stdenvNoCC.mkDerivation {
   pname = "tpeap";
-  version = "6.2.14.11";
+  version = "6.3.0.45";
 
   src = fetchurl {
-    url = "https://static.tp-link.com/upload/software/2026/202607/20260717/Omada_SDN_Controller_v6.2.14.11_linux_x64.tar.gz";
-    hash = "sha256-I0J/c92TBRpiCwgaq1X/zEz7IJUaAgodNXxD6CR4qnQ=";
+    url = "https://static.tp-link.com/upload/software/2026/202609/20260904/Omada_Network_Application_v6.3.0.45_linux_x64_20260903171900.tar.gz";
+    hash = "sha256-2t9+GH+ishiSo/Jkda4VNg9B1k9XinDwgB0q4Z2p62o=";
   };
 
   dontConfigure = true;
